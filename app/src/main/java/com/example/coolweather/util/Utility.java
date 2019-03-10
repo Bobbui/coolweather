@@ -1,6 +1,7 @@
 package com.example.coolweather.util;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.coolweather.db.City;
 import com.example.coolweather.db.County;
@@ -38,6 +39,7 @@ public class Utility {
     public static boolean handleCityResponse(String response, int provinceId){
         if (!TextUtils.isEmpty(response)){
             try{
+                Log.i("###",response);
                 JSONArray allCities = new JSONArray(response);
                 for (int i = 0; i < allCities.length(); i++){
                     JSONObject cityObject = allCities.getJSONObject(i);
@@ -47,6 +49,7 @@ public class Utility {
                     city.setProvinceID(provinceId);
                     city.save();
                 }
+                return true;
             } catch (JSONException e){
                 e.printStackTrace();
             }
@@ -69,7 +72,7 @@ public class Utility {
                     county.setCityID(cityId);
                     county.save();
                 }
-
+                return true;
             } catch (JSONException e){
                 e.printStackTrace();
             }
@@ -77,3 +80,12 @@ public class Utility {
         return false;
     }
 }
+/**
+    public static String JSONTokener(String str_json) {
+        // consume an optional byte order mark (BOM) if it exists
+        if (str_json != null && str_json.startsWith("\ufeff")) {
+            istr_json = str_json.substring(1);
+        }
+        return str_json;
+    }
+*/
