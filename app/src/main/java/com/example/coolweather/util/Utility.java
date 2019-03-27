@@ -2,14 +2,21 @@ package com.example.coolweather.util;
 
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.coolweather.WeatherActivity;
 import com.example.coolweather.db.City;
 import com.example.coolweather.db.County;
 import com.example.coolweather.db.Province;
+import com.example.coolweather.gson.Weather;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class Utility {
     /**
@@ -70,15 +77,56 @@ public class Utility {
                     county.setCountyName(countyObject.getString("name"));
                     county.setWeatherID(countyObject.getString("weather_id"));
                     county.setCityID(cityId);
+                    Log.i("!!!","cityId");
                     county.save();
                 }
                 return true;
             } catch (JSONException e){
                 e.printStackTrace();
+                Log.i("!!!","cityId");
+
             }
         }
         return false;
     }
+
+    /**
+     * 将返回的JSON数据解析成Weather实体类
+     * @param response
+     */
+    public static Weather handlerWeatherResponse(String response){
+        Log.i("!!!",response);
+        try{
+
+            //Log.i("!!!","JSON 1");
+            JSONObject jsonObject = new JSONObject(response);
+            //Gson gson = new Gson();
+
+            //Log.i("!!!","JSON 2");
+            //Log.i("!!!",jsonObject.getString("status"));
+            //Weather weather = gson.fromJson(response,Weather.class);
+            //Log.i("!!!","JSON 3");
+
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather6");
+
+            //Log.i("!!!","JSON 3");
+            //Log.i("!!!",weather.status);
+            //return weather;
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+            Log.i("!!!","weatherContent=" + weatherContent);
+            //Log.i("!!!","JSON 4");
+            Weather weather = new Gson().fromJson(weatherContent,Weather.class);
+
+            return weather;
+
+        } catch (Exception e){
+            Log.i("!!!","ERROR");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }
 /**
     public static String JSONTokener(String str_json) {
